@@ -1,0 +1,16 @@
+{
+  "source_sha256": "9e5954117a9357826332d92fb8da9a34fc089c7ea286e57ec72329d43475d9c4",
+  "rknn_sha256": "3ca9cd645b76cfaf26a4a9254bc4c93159ab48fdb42cc90ed0232b56f0613b73",
+  "fp16": true,
+  "int8": false,
+  "training": false,
+  "pruning": false,
+  "segmentation_removed": true,
+  "target": "rk3568",
+  "outputs": [
+    "det_out"
+  ],
+  "conversion_seconds": 87.66666812299991,
+  "runtime_enabled": false,
+  "scope": "independent supplementary candidate; numeric and timing gates must pass before deployment"
+}

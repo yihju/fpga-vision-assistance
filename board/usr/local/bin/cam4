@@ -1,0 +1,4 @@
+#!/bin/sh
+export DISPLAY=${DISPLAY:-:0}
+export XAUTHORITY=${XAUTHORITY:-/home/linaro/.Xauthority}
+exec /usr/bin/python3 -B /userdata/adas_showcase_20261101/cam4_player.py "$@"

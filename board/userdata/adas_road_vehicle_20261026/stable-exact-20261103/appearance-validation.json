@@ -1,0 +1,66 @@
+{
+  "all_hsv_bins_exact": true,
+  "hsv_colors": 11796480,
+  "histograms_exact": true,
+  "tested_patches": 6,
+  "checks": [
+    {
+      "shape": [
+        37,
+        29,
+        3
+      ],
+      "input_sha": "83473a45503be351247e2a8a4abe611ed24f0f5f05d8f69aae7bd6737b54e6a7",
+      "exact": true
+    },
+    {
+      "shape": [
+        31,
+        37,
+        3
+      ],
+      "input_sha": "e0b260fcb72615a57a7446411213908ce99233e64741e9beeb70bfb044592565",
+      "exact": true
+    },
+    {
+      "shape": [
+        1080,
+        1920,
+        3
+      ],
+      "input_sha": "ed93571bc28b0a30cda9c6048fb789697dce3bb87a4ad41a0c69b4ecfcbafc44",
+      "exact": true
+    },
+    {
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "input_sha": "f9d1fe090b151827ff63bbf3318ba1d59c9eb95ac8efc9b51d910eeb8b465f4f",
+      "exact": true
+    },
+    {
+      "shape": [
+        47,
+        49,
+        3
+      ],
+      "input_sha": "51c1f7db6f7d011e7705c06a9593f5b8124531c5c326d02a98cc45d72d26b86e",
+      "exact": true
+    },
+    {
+      "shape": [
+        1080,
+        1920,
+        3
+      ],
+      "input_sha": "00672ab8f96c193cc1643bb38d4c9b1f5979a39f4d0624f395a60869a1051225",
+      "exact": true
+    }
+  ],
+  "seconds": 1.4900866000007227,
+  "library_sha256": "8e8bed9dbbdef06b294d03831eb3725d4419bd401c937c12436f1dce455171c3",
+  "source_sha256": "97ac9658c972365430871e29d2738686d93a5556e75bf84da50446baaa4b4698",
+  "runtime_installed": false
+}

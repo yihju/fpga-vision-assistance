@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /home/linaro/plate_demo_20261015/plate-demo "$@"

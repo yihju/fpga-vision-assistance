@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""Private RK four-camera demo. Never programs FPGA Flash or changes bitstreams."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import signal
+import subprocess
+import sys
+import time
+
+ASSETS = {
+    'pcie_preview_stream': 'b3d200c8fe78e0cb0f9f131f2e367a829c0ad877306fba3410f28a253d61c32f',
+    'plate_video_dma.ko': '68d35884009bfcb7c4b97277dd3fc2903d94a9f23a20c705ba9cebaf21ac634a',
+    'start_preview_stream.sh': '66fd5eee29b637e8b66f381cd2b3be3d8aa655ecefb6332187dc377352645901',
+}
+
+
+def verify_assets(directory, assets=ASSETS):
+    for name, expected in assets.items():
+        path = directory / name
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise RuntimeError('SHA256 mismatch or missing asset: ' + name)
+
+
+def run_video(directory, shell='/bin/sh'):
+    env = dict(os.environ)
+    env.setdefault('DISPLAY', ':0')
+    return run_child([shell, str(directory / 'start_preview_stream.sh'),
+                      '--max-fps', '25', '--stats'], env)
+
+
+def run_child(command, env):
+    child = subprocess.Popen(command, env=env)
+    previous = {}
+    def terminate(signum, _frame):
+        if child.poll() is None:
+            child.send_signal(signum)
+    try:
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            previous[sig] = signal.signal(sig, terminate)
+        return child.wait()
+    finally:
+        for sig, handler in previous.items():
+            signal.signal(sig, handler)
+
+
+
+
+def matches_demo(arguments, script):
+    return (len(arguments) in (2, 3) and Path(arguments[1]).resolve() == Path(script).resolve()
+            and (len(arguments) == 2 or arguments[2] in ('video', 'lpr')))
+
+
+def stop_demo(directory):
+    targets = []
+    for process in Path('/proc').iterdir():
+        if not process.name.isdigit() or int(process.name) == os.getpid():
+            continue
+        try:
+            if process.stat().st_uid != os.getuid():
+                continue
+            args = (process/'cmdline').read_bytes().rstrip(b'\0').decode().split('\0')
+            if matches_demo(args, directory/'plate-demo'):
+                os.kill(int(process.name), signal.SIGTERM)
+                targets.append(process)
+        except (OSError, UnicodeError):
+            continue
+    deadline = time.monotonic()+15
+    while targets and time.monotonic() < deadline:
+        alive = []
+        for process in targets:
+            try:
+                if (process/'cmdline').read_bytes():
+                    alive.append(process)
+            except OSError:
+                pass
+        targets = alive
+        if targets:
+            time.sleep(.1)
+    if targets:
+        raise RuntimeError('STOP still pending; do not force-unload the driver')
+    print('Demo stopped. You may now run plate-demo video.')
+    return 0
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Four-camera HDMI demo; Ctrl+C stops ordered DMA.')
+    parser.add_argument('command', nargs='?', default='video', choices=['video', 'status', 'stop'])
+    args = parser.parse_args()
+    directory = Path(__file__).resolve().parent
+    try:
+        verify_assets(directory)
+        state = dict(kernel=platform.release(), device=Path('/dev/plate_video_dma').exists(),
+                     driver=Path('/sys/module/plate_video_dma').is_dir(),
+                     fpga_flash_programmed_by_this_launcher=False)
+        if args.command == 'status':
+            print(json.dumps(state, indent=2))
+            return 0
+        if args.command == 'stop':
+            return stop_demo(directory)
+        if platform.system() != 'Linux' or platform.machine() != 'aarch64' or platform.release() != '6.1.99':
+            raise RuntimeError('Requires the validated RK aarch64 Linux 6.1.99 environment')
+        import fcntl
+        runtime = Path(os.environ.get('XDG_RUNTIME_DIR', '/tmp'))
+        with (runtime / ('plate-demo-%d.lock' % os.getuid())).open('a') as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                raise RuntimeError('Another plate-demo is already running') from None
+            if not state['driver']:
+                subprocess.run(['sudo', '-n', '/sbin/insmod', str(directory / 'plate_video_dma.ko')], check=True)
+            if not Path('/dev/plate_video_dma').exists():
+                raise RuntimeError('Stage2 device absent: restore the saved FPGA RAM bitstream first; do not change wiring')
+            # Old launchers may not hold our lock. Never start a second DMA owner.
+            busy = subprocess.run(['sudo', '-n', 'fuser', '/dev/plate_video_dma'],
+                                  stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+            if busy.returncode == 0:
+                raise RuntimeError('Video capture already running; stop the existing preview with Ctrl+C first')
+            if busy.returncode != 1:
+                raise RuntimeError('Cannot check device ownership: ' + busy.stderr.decode(errors='replace'))
+            print('Starting four real cameras. Ctrl+C to stop. RAM bitstream must already be loaded.', flush=True)
+            return run_video(directory)
+    except KeyboardInterrupt:
+        return 130
+    except (RuntimeError, OSError, subprocess.CalledProcessError) as error:
+        print('plate-demo: ' + str(error), file=sys.stderr)
+        return 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

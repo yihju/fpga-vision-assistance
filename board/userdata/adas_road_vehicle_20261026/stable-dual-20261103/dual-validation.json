@@ -1,0 +1,95 @@
+{
+  "native_input_exact": true,
+  "outputs_bitwise_exact": true,
+  "tracking_rgb_exact": true,
+  "tracking_gray_exact": true,
+  "cases": 10,
+  "area6_all_9181_sums": true,
+  "library_sha256": "40ea6a23c8fd38521be7ce68bf35b83ebd6c1923095a8e76121f86da3c44b034",
+  "source_sha256": "e6a117a55cdcfd28c34d19033c54794299b20967db73c25c1d0016e929672871",
+  "rows": [
+    {
+      "case": "0",
+      "all_exact": true,
+      "call_ms": [
+        223.906126,
+        218.613419
+      ]
+    },
+    {
+      "case": "90",
+      "all_exact": true,
+      "call_ms": [
+        218.413622,
+        218.55975
+      ]
+    },
+    {
+      "case": "180",
+      "all_exact": true,
+      "call_ms": [
+        218.453581,
+        218.385038
+      ]
+    },
+    {
+      "case": "270",
+      "all_exact": true,
+      "call_ms": [
+        218.70617,
+        218.702379
+      ]
+    },
+    {
+      "case": "360",
+      "all_exact": true,
+      "call_ms": [
+        218.488582,
+        218.410705
+      ]
+    },
+    {
+      "case": "black",
+      "all_exact": true,
+      "call_ms": [
+        211.998845,
+        211.686171
+      ]
+    },
+    {
+      "case": "white",
+      "all_exact": true,
+      "call_ms": [
+        217.510892,
+        217.263553
+      ]
+    },
+    {
+      "case": "random",
+      "all_exact": true,
+      "call_ms": [
+        218.105906,
+        218.177657
+      ]
+    },
+    {
+      "case": "channels",
+      "all_exact": true,
+      "call_ms": [
+        217.490475,
+        217.57681
+      ]
+    },
+    {
+      "case": "every_area6_sum_0_to_9180",
+      "all_exact": true,
+      "call_ms": [
+        218.010528,
+        217.674229
+      ]
+    }
+  ],
+  "validated_source_sha256_before_include_fix": "9a1c8546bbf1bc64868af9da005f045fdbd16299514b850c15b1f5c71d4913e8",
+  "header_self_contained_include_fix": true,
+  "rebuilt_binary_bitwise_unchanged": true
+}

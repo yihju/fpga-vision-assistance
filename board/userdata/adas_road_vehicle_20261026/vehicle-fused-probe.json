@@ -1,0 +1,197 @@
+{
+  "status": "vehicle_numeric_probe_pass",
+  "export": {
+    "source_sha256": "9e5954117a9357826332d92fb8da9a34fc089c7ea286e57ec72329d43475d9c4",
+    "rknn_sha256": "3ca9cd645b76cfaf26a4a9254bc4c93159ab48fdb42cc90ed0232b56f0613b73",
+    "fp16": true,
+    "int8": false,
+    "training": false,
+    "pruning": false,
+    "segmentation_removed": true,
+    "target": "rk3568",
+    "outputs": [
+      "det_out"
+    ],
+    "conversion_seconds": 87.66666812299991,
+    "runtime_enabled": false,
+    "scope": "independent supplementary candidate; numeric and timing gates must pass before deployment"
+  },
+  "rows": [
+    {
+      "case": {
+        "index": 0,
+        "sample_id": "video_20260929_113343:13",
+        "image": "case_0.jpg",
+        "image_sha256": "8923f902ffce6f92dcd31539a271d6a008e81dd7485b18fffb600fa100e03d31",
+        "reference": "case_0.npz"
+      },
+      "gate": {
+        "passed": true,
+        "cpu_strong_vehicles": 9,
+        "npu_strong_vehicles": 9,
+        "matches": [
+          {
+            "iou": 0.9977129583854636,
+            "score_difference": 0.0008016228675842285
+          },
+          {
+            "iou": 0.9949210810264548,
+            "score_difference": 0.0019398331642150879
+          },
+          {
+            "iou": 0.9947464865544969,
+            "score_difference": 0.001282334327697754
+          },
+          {
+            "iou": 0.9844176508986228,
+            "score_difference": 0.000761866569519043
+          },
+          {
+            "iou": 0.9718077513220383,
+            "score_difference": 0.0007910728454589844
+          },
+          {
+            "iou": 0.9945017987131476,
+            "score_difference": 0.0007959604263305664
+          },
+          {
+            "iou": 0.966187961777356,
+            "score_difference": 0.002055227756500244
+          },
+          {
+            "iou": 0.9938254562558144,
+            "score_difference": 0.009612739086151123
+          },
+          {
+            "iou": 0.9724396879465427,
+            "score_difference": 0.002396523952484131
+          }
+        ],
+        "limits": {
+          "confidence": 0.5,
+          "vehicle_iou": 0.9,
+          "score_difference": 0.03
+        },
+        "segmentation_exported": false,
+        "native_input_exact": true
+      }
+    },
+    {
+      "case": {
+        "index": 1,
+        "sample_id": "video_20260929_113343:621",
+        "image": "case_1.jpg",
+        "image_sha256": "e7cfcf1d7475670c8075db0ec9b4ac7b887ede2950377213571e5a00ea6741bd",
+        "reference": "case_1.npz"
+      },
+      "gate": {
+        "passed": true,
+        "cpu_strong_vehicles": 2,
+        "npu_strong_vehicles": 2,
+        "matches": [
+          {
+            "iou": 0.9968816202613517,
+            "score_difference": 0.0010724663734436035
+          },
+          {
+            "iou": 0.9901963068951983,
+            "score_difference": 0.0005806088447570801
+          }
+        ],
+        "limits": {
+          "confidence": 0.5,
+          "vehicle_iou": 0.9,
+          "score_difference": 0.03
+        },
+        "segmentation_exported": false,
+        "native_input_exact": true
+      }
+    },
+    {
+      "case": {
+        "index": 2,
+        "sample_id": "video_20260929_113539:1157",
+        "image": "case_2.jpg",
+        "image_sha256": "5be9edda437158ee281e50bbfe0e2b84798d35bb613c9a4087a31bde667a39b9",
+        "reference": "case_2.npz"
+      },
+      "gate": {
+        "passed": true,
+        "cpu_strong_vehicles": 14,
+        "npu_strong_vehicles": 14,
+        "matches": [
+          {
+            "iou": 0.9957434043450517,
+            "score_difference": 0.0007183551788330078
+          },
+          {
+            "iou": 0.9959936319361721,
+            "score_difference": 0.000737607479095459
+          },
+          {
+            "iou": 0.9975200724957703,
+            "score_difference": 0.001993894577026367
+          },
+          {
+            "iou": 0.9954006895243768,
+            "score_difference": 0.000979781150817871
+          },
+          {
+            "iou": 0.9946112603951766,
+            "score_difference": 0.0007621645927429199
+          },
+          {
+            "iou": 0.9975472942056062,
+            "score_difference": 0.0014123916625976562
+          },
+          {
+            "iou": 0.9972793996197883,
+            "score_difference": 0.0011456012725830078
+          },
+          {
+            "iou": 0.9950045196921408,
+            "score_difference": 0.00038111209869384766
+          },
+          {
+            "iou": 0.9911638437183626,
+            "score_difference": 0.0006805062294006348
+          },
+          {
+            "iou": 0.9896319295968671,
+            "score_difference": 0.0008320808410644531
+          },
+          {
+            "iou": 0.9955307717113215,
+            "score_difference": 0.001044929027557373
+          },
+          {
+            "iou": 0.9948347765301154,
+            "score_difference": 0.0012736916542053223
+          },
+          {
+            "iou": 0.9798073141879922,
+            "score_difference": 0.002809762954711914
+          },
+          {
+            "iou": 0.9929764359383505,
+            "score_difference": 0.0020839571952819824
+          }
+        ],
+        "limits": {
+          "confidence": 0.5,
+          "vehicle_iou": 0.9,
+          "score_difference": 0.03
+        },
+        "segmentation_exported": false,
+        "native_input_exact": true
+      }
+    }
+  ],
+  "load_ms": 158.451566,
+  "runtime_enabled": false,
+  "native_input": true,
+  "fused": true,
+  "bridge_sha256": "9c81964682c3a65203de728bdb08c3ebfd40bddd62e75360919ac4627f57c9ce",
+  "segmentation_exported": false,
+  "scope": "fresh rerun of original3 fixed cases on same model+exact NEON input;72same-frame fresh NPU outputs/complete trackers exact"
+}

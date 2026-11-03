@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""Persistent STATIC IMAGE simulation on the RK; existing video entry is retained."""
+import argparse
+import os
+import subprocess
+import time
+from pathlib import Path
+
+ROOT = Path('/userdata/adas_static_20261027')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('image', type=Path, help='one existing JPG/PNG/BMP/WebP/TIFF')
+    parser.add_argument('--scenario', choices=('intersection', 'lane', 'navigation'), default='intersection')
+    parser.add_argument('--lane', choices=('left', 'straight', 'right'), default='straight')
+    parser.add_argument('--move', action='store_true', help='explicit initial simulated motion')
+    parser.add_argument('--max-seconds', type=float, help='maximum interaction duration in seconds')
+    args = parser.parse_args()
+    image = args.image.resolve(strict=True)
+    if not image.is_file():
+        parser.error('single image file required')
+    if args.max_seconds is not None and not 0 < args.max_seconds < float('inf'):
+        parser.error('positive finite max-seconds required')
+    if image.suffix.lower() not in ('.jpg', '.jpeg', '.png', '.bmp', '.webp', '.tif', '.tiff'):
+        parser.error('single still image required')
+    status = subprocess.run(['/usr/local/bin/adas-scene-demo', 'status'], capture_output=True, text=True, check=True).stdout
+    if status.startswith('ADAS running'):
+        subprocess.run(['/usr/local/bin/adas-scene-demo', 'stop'], check=True)
+        until = time.monotonic() + 8
+        while time.monotonic() < until:
+            status = subprocess.run(['/usr/local/bin/adas-scene-demo', 'status'], capture_output=True, text=True, check=True).stdout
+            if status.startswith('ADAS stopped'):
+                break
+            time.sleep(.1)
+        else:
+            raise RuntimeError('video still owns LED; refusing simultaneous output')
+    output = ROOT / 'runs' / ('static-' + str(time.time_ns()))
+    command = ['sudo', '-n', 'env', 'DISPLAY=' + os.environ.get('DISPLAY', ':0'),
+               'XAUTHORITY=/home/linaro/.Xauthority',
+               'PYTHONPATH=/home/linaro/plate_demo_20261015/python-deps',
+               'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1', 'ADAS_STATIC_NPU=1',
+               'python3', '-B', str(ROOT / 'static_image_board.py'), str(image),
+               '--output', str(output), '--scenario', args.scenario, '--lane', args.lane]
+    if args.move:
+        command.append('--move')
+    if args.max_seconds is not None:
+        command += ['--max-seconds', str(args.max_seconds)]
+    print('STATIC IMAGE / NOT LIVE; ESC exits. F_Key1: direction; C_Key1: stop/go/held force.', flush=True)
+    print('Evidence: ' + str(output), flush=True)
+    return subprocess.call(command, cwd=ROOT)
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

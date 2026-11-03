@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "directory_relative_to_project": "adas/assets/models",
+  "model": "best.onnx",
+  "model_sha256": "8e53bfd36cf848696a4eb3ca6727929dab2993968c00ecbf75aa92830f73e599",
+  "anchors": "RK_anchors.txt",
+  "anchor_sha256": "0936456da635f4c08e89dc719fd6088b68cfac6878318adb29c3d184424c8d2e",
+  "classes": [
+    "zebra",
+    "person",
+    "red",
+    "green",
+    "black",
+    "yellow"
+  ],
+  "onnx_output_domain": "probabilities",
+  "rknn_output_domain": "unverified_saved_file_reference_converter_trims_to_logits",
+  "hardware_tested": false,
+  "publication_license": "not_verified_reference_assets_private_local_use"
+}

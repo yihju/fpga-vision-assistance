@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""Inspect or stop the existing scene owner before starting the current demo."""
+import argparse, os, signal
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent
+PIDFILE=ROOT/'adas-scene-demo.pid'
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('mode', choices=('status','stop'))
+    args=parser.parse_args()
+    if args.mode in ('status','stop'):
+            if not PIDFILE.exists():print('ADAS stopped');return 0
+            pid=int(PIDFILE.read_text());proc=Path('/proc')/str(pid)
+            try:
+                argv=(proc/'cmdline').read_bytes().rstrip(b'\0').decode().split('\0')
+                matched=proc.stat().st_uid==os.getuid() and len(argv)>1 and Path(argv[1]).resolve()==Path(__file__).resolve()
+            except (OSError,UnicodeError):matched=False
+            if not matched:print('ADAS stopped (stale pid receipt)');return 0
+            if args.mode=='stop':os.kill(pid,signal.SIGTERM);print('Generic ADAS stop requested')
+            else:print('ADAS running pid='+str(pid)+' latest='+str(ROOT/'latest-scene-run.txt'))
+            return 0
+
+if __name__=='__main__':
+    raise SystemExit(main())

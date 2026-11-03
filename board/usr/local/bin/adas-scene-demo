@@ -1,0 +1,3 @@
+#!/bin/sh
+# Requires LEDI4 independent RAM; does not program RAM or Flash.
+exec sudo -n /usr/bin/python3 /home/linaro/adas_board_20261024/adas-scene-demo "$@"
